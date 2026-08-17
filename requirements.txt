@@ -1,0 +1,3 @@
+streamlit
+youtube-search-python
+pandas
