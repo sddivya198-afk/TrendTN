@@ -1,25 +1,40 @@
 import streamlit as st
-from youtubesearchpython import VideosSearch
 import pandas as pd
 from datetime import datetime
+from yt_dlp import YoutubeDL
 
-@st.cache_data(ttl=1800)  # 30 min ku oru thadava dhan YouTube ah ketkum
-def get_trending():
-    videosSearch = VideosSearch("", region="IN", lang="ta", limit=10)
-    return videosSearch.result()['result']
+st.set_page_config(page_title="TrendTN", layout="centered")
 
-st.set_page_config(page_title="TrendTN", page_icon="🔥")
 st.title("🔥 TrendTN")
-st.write("Warning illaama clear ah Tamil Nadu trending paaru")
-
-st.header("Today's TN Trends - " + datetime.now().strftime("%d %b %Y"))
-
+st.caption("Warning illaama clear ah Tamil Nadu trending paaru")
+st.header(f"Today's TN Trends - {datetime.now().strftime('%d %b %Y')}")
 st.subheader("YouTube TN Trending")
-try:
-    result = get_trending()
-    for i, video in enumerate(result, 1):
-        st.write(f"{i}. {video['title']} - {video['channel']['name']}")
-except:
-    st.write("YouTube data loading...")
 
-st.success("App is running!")
+@st.cache_data(ttl=3600)
+def get_trending():
+    ydl_opts = {
+        'extract_flat': True,
+        'quiet': True,
+        'noplaylist': True,
+        'default_search': 'ytsearch20 TN Trending'
+    }
+    with YoutubeDL(ydl_opts) as ydl:
+        results = ydl.extract_info("ytsearch20 TN Trending", download=False)
+        videos = []
+        for item in results['entries']:
+            videos.append({
+                "Title": item['title'],
+                "Channel": item.get('uploader', 'N/A'),
+                "Link": f"https://youtube.com/watch?v={item['id']}"
+            })
+    return pd.DataFrame(videos)
+
+try:
+    df = get_trending()
+    for i, row in df.iterrows():
+        st.write(f"**{i+1}. {row['Title']}**")
+        st.write(f"Channel: {row['Channel']}")
+        st.link_button("Watch Video", row['Link'])
+        st.divider()
+except Exception as e:
+    st.error(f"Error: {e}")
