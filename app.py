@@ -53,4 +53,4 @@ try:
 except Exception as e:
     st.error(f"Error: {e}")
 st.sidebar.markdown("---")
-st.sidebar.markdown("**Video Submit Panna:** [Google Form](https://forms.gle/demo)")
+st.sidebar.markdown("**📝 Video Submit Panna:** [Click Here](https://docs.google.com/forms/d/e/1FAIpQLSeuqevG74XPuM98hRBSAAw5vL-p2xPmPwi8wKj--ZDWzYKCPg/viewform?usp=publish-editor)")
