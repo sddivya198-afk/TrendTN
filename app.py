@@ -16,25 +16,11 @@ def get_trending():
         'extract_flat': True,
         'quiet': True,
         'noplaylist': True,
-        'default_search': 'ytsearch20 TN Trending'
+        'skip_download': True,
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        },
+        'default_search': 'ytsearch15 TN Trending'
     }
     with YoutubeDL(ydl_opts) as ydl:
-        results = ydl.extract_info("ytsearch20 TN Trending", download=False)
-        videos = []
-        for item in results['entries']:
-            videos.append({
-                "Title": item['title'],
-                "Channel": item.get('uploader', 'N/A'),
-                "Link": f"https://youtube.com/watch?v={item['id']}"
-            })
-    return pd.DataFrame(videos)
-
-try:
-    df = get_trending()
-    for i, row in df.iterrows():
-        st.write(f"**{i+1}. {row['Title']}**")
-        st.write(f"Channel: {row['Channel']}")
-        st.link_button("Watch Video", row['Link'])
-        st.divider()
-except Exception as e:
-    st.error(f"Error: {e}")
+        results = ydl.extract_info("ytsearch15 TN
