@@ -1,5 +1,5 @@
 import streamlit as st
-from youtube_search import VideosSearch
+from youtubesearchpython import VideosSearch
 import pandas as pd
 from datetime import datetime
 
