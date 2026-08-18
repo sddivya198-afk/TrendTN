@@ -18,12 +18,13 @@ st.title("🔥 TrendTN - Tamil YouTube Trending")
 st.write("Tamil Nadu la ipo trending aagura 20 videos")
 
 # 3. TRENDING VIDEOS EDUTHU VARADHU
-@st.cache_data(ttl=600) # 10 nimishathukku oru thadava update aagum
+@st.cache_data(ttl=600)
 def get_trending_tn():
     request = youtube.videos().list(
         part="snippet,statistics",
         chart="mostPopular",
         regionCode="IN", # India
+        videoCategoryId="10", # Music + Entertainment
         maxResults=20
     )
     response = request.execute()
