@@ -17,19 +17,30 @@ def get_trending():
         'quiet': True,
         'skip_download': True
     }
-    with YoutubeDL(ydl_opts) as ydl:
-        # India Trending page ah direct ah edukum
-        results = ydl.extract_info("https://www.youtube.com/feed/trending", download=False)
-        videos = []
-        if results and 'entries' in results:
-            for item in results['entries'][:15]: # first 15 videos
-                if item:
-                    videos.append({
-                        "Title": item.get('title', 'No Title'),
-                        "Channel": item.get('uploader', 'N/A'),
-                        "Link": f"https://youtube.com/watch?v={item['id']}"
-                    })
-    return pd.DataFrame(videos)
+    try:
+        with YoutubeDL(ydl_opts) as ydl:
+            results = ydl.extract_info("https://www.youtube.com/feed/trending", download=False)
+            videos = []
+            if results and 'entries' in results:
+                for item in results['entries'][:15]:
+                    if item:
+                        videos.append({
+                            "Title": item.get('title', 'No Title'),
+                            "Channel": item.get('uploader', 'N/A'),
+                            "Link": f"https://youtube.com/watch?v={item['id']}"
+                        })
+        return pd.DataFrame(videos)
+    except Exception as e:
+        st.error(f"Data eduka mudiyala: {e}")
+        return pd.DataFrame()
 
-try:
-    df = get
+df = get_trending()
+
+if df.empty:
+    st.warning("Ipo videos eduka mudiyala. 5 min kazhichu refresh pannunga")
+else:
+    for i, row in df.iterrows():
+        st.write(f"**{i+1}. {row['Title']}**")
+        st.write(f"Channel: {row['Channel']}")
+        st.link_button("Watch Video", row['Link'])
+        st.divider()
