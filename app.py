@@ -1,46 +1,52 @@
 import streamlit as st
+from googleapiclient.discovery import build
 import pandas as pd
-from datetime import datetime
-from yt_dlp import YoutubeDL
 
-st.set_page_config(page_title="TrendTN", layout="centered")
+st.set_page_config(page_title="TrendTN", layout="wide")
 
-st.title("🔥 TrendTN")
-st.caption("Warning illaama clear ah Tamil Nadu trending paaru")
-st.header(f"Today's TN Trends - {datetime.now().strftime('%d %b %Y')}")
-st.subheader("YouTube TN Trending")
+# 1. KEY AH SECRETS LA IRUNDHU EDUTHUKURADHU
+YOUTUBE_API_KEY = st.secrets["YOUTUBE_API_KEY"]
 
-@st.cache_data(ttl=3600)
-def get_trending():
-    ydl_opts = {
-        'extract_flat': True,
-        'quiet': True,
-        'skip_download': True
-    }
-    try:
-        with YoutubeDL(ydl_opts) as ydl:
-            results = ydl.extract_info("https://www.youtube.com/feed/trending", download=False)
-            videos = []
-            if results and 'entries' in results:
-                for item in results['entries'][:15]:
-                    if item:
-                        videos.append({
-                            "Title": item.get('title', 'No Title'),
-                            "Channel": item.get('uploader', 'N/A'),
-                            "Link": f"https://youtube.com/watch?v={item['id']}"
-                        })
-        return pd.DataFrame(videos)
-    except Exception as e:
-        st.error(f"Data eduka mudiyala: {e}")
-        return pd.DataFrame()
+# 2. YOUTUBE CONNECT PANNURADHU
+@st.cache_resource
+def get_youtube():
+    return build("youtube", "v3", developerKey=YOUTUBE_API_KEY)
 
-df = get_trending()
+youtube = get_youtube()
 
-if df.empty:
-    st.warning("Ipo videos eduka mudiyala. 5 min kazhichu refresh pannunga")
-else:
-    for i, row in df.iterrows():
-        st.write(f"**{i+1}. {row['Title']}**")
-        st.write(f"Channel: {row['Channel']}")
-        st.link_button("Watch Video", row['Link'])
+st.title("🔥 TrendTN - Tamil YouTube Trending")
+st.write("Tamil Nadu la ipo trending aagura videos")
+
+# 3. TRENDING VIDEOS EDUTHU KAATUDHU
+@st.cache_data(ttl=600) # 10 nimishathukku oru thadava update aagum
+def get_trending_tn():
+    request = youtube.videos().list(
+        part="snippet,statistics",
+        chart="mostPopular",
+        regionCode="IN", # India
+        maxResults=20
+    )
+    response = request.execute()
+    return response["items"]
+
+try:
+    videos = get_trending_tn()
+    for video in videos:
+        title = video["snippet"]["title"]
+        channel = video["snippet"]["channelTitle"]
+        views = int(video["statistics"]["viewCount"])
+        thumbnail = video["snippet"]["thumbnails"]["medium"]["url"]
+        video_id = video["id"]
+        
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            st.image(thumbnail)
+        with col2:
+            st.subheader(title)
+            st.write(f"**Channel:** {channel}")
+            st.write(f"**Views:** {views:,}")
+            st.markdown(f"[Watch Video](https://www.youtube.com/watch?v={video_id})")
         st.divider()
+
+except Exception as e:
+    st.error(f"Error: {e}")
