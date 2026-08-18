@@ -18,9 +18,4 @@ def get_trending():
         'noplaylist': True,
         'skip_download': True,
         'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        },
-        'default_search': 'ytsearch15 TN Trending'
-    }
-    with YoutubeDL(ydl_opts) as ydl:
-  results = ydl.extract_info("ytsearch15 TN Trending", download=False)      
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Apple
