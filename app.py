@@ -44,11 +44,14 @@ try:
         with col1:
             st.image(thumbnail)
         with col2:
-            st.subheader(title)
-            st.write(f"**Channel:** {channel}")
-            st.write(f"**Views:** {views:,}")
-            st.markdown(f"[Watch Video](https://www.youtube.com/watch?v={video_id})")
-        st.divider()
+    st.subheader(title)
+    st.write(f"**Channel:** {channel}")
+    st.write(f"**Views:** {views:,}")
+    
+    # ITHA ITHA KIZHA ADD PANNUDU
+    st.video(f"https://www.youtube.com/watch?v={video_id}")
+    
+    st.markdown(f"[Watch Video](https://www.youtube.com/watch?v={video_id})")
 
 except Exception as e:
     st.error(f"Error: {e}")
