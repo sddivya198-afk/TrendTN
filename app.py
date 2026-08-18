@@ -23,4 +23,4 @@ def get_trending():
         'default_search': 'ytsearch15 TN Trending'
     }
     with YoutubeDL(ydl_opts) as ydl:
-        results = ydl.extract_info("ytsearch15 TN
+  results = ydl.extract_info("ytsearch15 TN Trending", download=False)      
