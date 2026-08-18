@@ -15,14 +15,14 @@ def get_trending():
     ydl_opts = {
         'extract_flat': True,
         'quiet': True,
-        'noplaylist': True,
         'skip_download': True
     }
     with YoutubeDL(ydl_opts) as ydl:
-        results = ydl.extract_info("ytsearch15 TN Trending", download=False)
+        # India Trending page ah direct ah edukum
+        results = ydl.extract_info("https://www.youtube.com/feed/trending", download=False)
         videos = []
         if results and 'entries' in results:
-            for item in results['entries']:
+            for item in results['entries'][:15]: # first 15 videos
                 if item:
                     videos.append({
                         "Title": item.get('title', 'No Title'),
@@ -32,14 +32,4 @@ def get_trending():
     return pd.DataFrame(videos)
 
 try:
-    df = get_trending()
-    if df.empty:
-        st.warning("Ipo videos eduka mudiyala. 5 min kazhichu refresh pannunga")
-    else:
-        for i, row in df.iterrows():
-            st.write(f"**{i+1}. {row['Title']}**")
-            st.write(f"Channel: {row['Channel']}")
-            st.link_button("Watch Video", row['Link'])
-            st.divider()
-except Exception as e:
-    st.error(f"Error: {e}")
+    df = get
