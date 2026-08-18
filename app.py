@@ -42,13 +42,13 @@ try:
         
         col1, col2 = st.columns([1, 3])
         with col1:
-        st.image(thumbnail)
+               st.image(thumbnail)
         with col2:
-    st.subheader(title)
-    st.write(f"**Channel:** {channel}")
-    st.write(f"**Views:** {views:,}")
-    st.video(f"https://www.youtube.com/watch?v={video_id}")  # <- indha line pudhusa add pannadhu
-    st.markdown(f"[Watch Video](https://www.youtube.com/watch?v={video_id})")
+              st.subheader(title)
+              st.write(f"**Channel:** {channel}")
+              st.write(f"**Views:** {views:,}")
+              st.video(f"https://www.youtube.com/watch?v={video_id}")  # <- indha line pudhusa add pannadhu
+              st.markdown(f"[Watch Video](https://www.youtube.com/watch?v={video_id})")
 
 except Exception as e:
     st.error(f"Error: {e}")
