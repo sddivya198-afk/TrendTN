@@ -16,6 +16,6 @@ def get_trending():
         'extract_flat': True,
         'quiet': True,
         'noplaylist': True,
-        'skip_download': True,
-        'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Apple
+        'skip_download': True
+    }
+    with Youtube
