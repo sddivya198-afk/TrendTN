@@ -15,9 +15,9 @@ def get_youtube():
 youtube = get_youtube()
 
 st.title("🔥 TrendTN - Tamil YouTube Trending")
-st.write("Tamil Nadu la ipo trending aagura videos")
+st.write("Tamil Nadu la ipo trending aagura 20 videos")
 
-# 3. TRENDING VIDEOS EDUTHU KAATUDHU
+# 3. TRENDING VIDEOS EDUTHU VARADHU
 @st.cache_data(ttl=600) # 10 nimishathukku oru thadava update aagum
 def get_trending_tn():
     request = youtube.videos().list(
@@ -29,6 +29,7 @@ def get_trending_tn():
     response = request.execute()
     return response["items"]
 
+# 4. VIDEOS AH SCROLL PANNA MAARI KAATUDHU
 try:
     videos = get_trending_tn()
     for video in videos:
